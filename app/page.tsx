@@ -42,7 +42,7 @@ export default function Chat() {
     },
   ]
 
-  const [isFullScreen, setIsFullScreen] = useState(false);  
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -211,16 +211,6 @@ export default function Chat() {
                     modules={[Mousewheel]}
                     className="mySwiper"
                   >
-                    <SwiperSlide>
-                      <p className="p-[10px] w-fit mb-[10px] text-[16px] bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]">
-                        Hi
-                      </p>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <p className="p-[10px] w-fit mb-[10px] text-[16px] bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]">
-                        How can I help you today?
-                      </p>
-                    </SwiperSlide>
                     {messages.length > 0
                       ? messages.map((m) => (
                         <SwiperSlide key={m.id}>
