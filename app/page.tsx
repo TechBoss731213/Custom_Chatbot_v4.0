@@ -48,6 +48,13 @@ export default function Chat() {
     setIsFullScreen(!isFullScreen);
   }
 
+  const handleSwiper = (swiper: any) => {
+    // Set the active slide to the last one
+    if (swiper) {
+      swiper.slideTo(messages.length, 0); // Assuming messages is the array of chat messages
+    }
+  };
+
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat-with-vision',
   })
