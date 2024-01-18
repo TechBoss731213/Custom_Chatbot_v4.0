@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useChat } from 'ai/react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel } from 'swiper/modules';
@@ -48,16 +48,25 @@ export default function Chat() {
     setIsFullScreen(!isFullScreen);
   }
 
+  const swiperRef = useRef<any | null>(null);
+
   const handleSwiper = (swiper: any) => {
-    // Set the active slide to the last one
-    if (swiper) {
-      swiper.slideTo(messages.length, 0); // Assuming messages is the array of chat messages
+    swiperRef.current = swiper;
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(messages.length, 0);
     }
   };
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat-with-vision',
   })
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(messages.length, 0);
+    }
+  }, [messages]);
+
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [base64Images, setBase64Images] = useState<string[]>([])
 
