@@ -16,6 +16,8 @@ import arrowRight from './images/arrow-right.png'
 import background from "./images/background.png";
 import linkFile from "./images/link.png";
 import submit from "./images/send.png";
+import fullScreenRevert from "./images/full-screen-revert.png";
+import fullScreen from "./images/full-screen-revert.png";
 
 export default function Chat() {
 
@@ -39,6 +41,12 @@ export default function Chat() {
       content: "What’s is the solution?"
     },
   ]
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  }
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat-with-vision',
@@ -169,91 +177,95 @@ export default function Chat() {
               </div>
             </div>
           ) : (
-            <div className="mx-auto flex w-full max-w-lg flex-col space-y-4 px-4 pb-60 pt-20">
-              <div className="fixed bottom-[50px] right-[50px]">
-                <div className="w-[400px] bg-[#08DA83] rounded-[20px] relative shadow-md">
-                  <div className="w-[30px] h-[30px] absolute top-[15px] right-[15px] cursor-pointer" onClick={() => toggleChatBot(0)}>
-                    <Image src={close} alt='Close' />
+            <div className={`${isFullScreen ? "w-full" : "fixed bottom-[50px] right-[50px]"}`}>
+              <div className={`${isFullScreen ? "w-full h-[100vh] relative bg-[#08DA83]" : "w-[400px] bg-[#08DA83] rounded-[20px] relative shadow-md"}`}>
+                <div className="w-[25px] h-[25px] absolute top-[15px] right-[15px] cursor-pointer" onClick={() => toggleChatBot(0)}>
+                  <Image src={close} alt='Close' />
+                </div>
+                <div className="w-[25px] h-[25px] absolute top-[15px] right-[50px] cursor-pointer" onClick={toggleFullScreen}>
+                  {isFullScreen === true ? (
+                    <Image src={fullScreenRevert} alt="Full Screen Revert Mode" />
+                  ) : (
+                    <Image src={fullScreen} alt="Full Screen Mode" />
+                  )}
+                </div>
+                <div className="flex justify-start items-center px-[15px] py-[20px] gap-[10px]">
+                  <div className="w-[50px] h-[50px]">
+                    <Image src={logo} alt="Logo"></Image>
                   </div>
-                  <div className="flex justify-start items-center px-[15px] py-[20px] gap-[10px]">
-                    <div className="w-[50px] h-[50px]">
-                      <Image src={logo} alt="Logo"></Image>
-                    </div>
-                    <h2 className="text-[#fff] text-[20px]">ChatBot Support</h2>
-                  </div>
-                  <div className="bg-[#fff] py-[20px] px-[15px] w-full rounded-t-[20px] h-[364px] bg-cover overflow-y-auto" style={{ backgroundImage: `url(${background.src})`, }}>
-                    <Swiper
-                      direction={'vertical'}
-                      slidesPerView={1}
-                      spaceBetween={30}
-                      mousewheel={true}
-                      modules={[Mousewheel]}
-                      className="mySwiper"
+                  <h2 className="text-[#fff] text-[20px]">ChatBot Support</h2>
+                </div>
+                <div className={`${isFullScreen ? "bg-[#fff] py-[20px] px-[15px] w-full rounded-t-[20px] h-[calc(100vh_-_166px)] bg-cover overflow-y-auto" : "bg-[#fff] py-[20px] px-[15px] w-full rounded-t-[20px] h-[364px] bg-cover overflow-y-auto"}`} style={{ backgroundImage: `url(${background.src})`, }}>
+                  <Swiper
+                    direction={'vertical'}
+                    slidesPerView={1}
+                    spaceBetween={30}
+                    mousewheel={true}
+                    modules={[Mousewheel]}
+                    className="mySwiper"
+                  >
+                    <SwiperSlide>
+                      <p className="p-[10px] w-fit mb-[10px] text-[16px] bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]">
+                        Hi
+                      </p>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                      <p className="p-[10px] w-fit mb-[10px] text-[16px] bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]">
+                        How can I help you today?
+                      </p>
+                    </SwiperSlide>
+                    {messages.length > 0
+                      ? messages.map((m) => (
+                        <SwiperSlide>
+                          <p key={m.id} className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
+                            {m.content}
+                          </p>
+                        </SwiperSlide>
+                      ))
+                      : null}
+                  </Swiper>
+                </div>
+                <div className={`${isFullScreen ? "w-full" : "mx-auto max-w-lg w-full"}`}>
+                  <div className="rounded border-gray-700">
+                    <FilePreview />
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit(e, {
+                          data: {
+                            base64Images: JSON.stringify(base64Images),
+                          },
+                        })
+                      }}
+                      className={`flex items-center justify-center px-[20px] gap-[10px] py-[19px] bg-[#fff] border-[1px] border-t-[#C0C0C0] ${isFullScreen ? "" : "rounded-b-[20px]"}`}
                     >
-                      <SwiperSlide>
-                        <p className="p-[10px] w-fit mb-[10px] bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]">
-                          Hi
-                        </p>
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <p className="p-[10px] w-fit mb-[10px] bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]">
-                          How can I help you today?
-                        </p>
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        {messages.length > 0
-                          ? messages.map((m) => (
-                            <p key={m.id} className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
-                              {m.content}
-                            </p>
-                          ))
-                          : null}
-                      </SwiperSlide>
-                    </Swiper>
-                  </div>
-                  <div className="mx-auto max-w-lg w-full">
-                    <div className="rounded border-gray-700">
-                      <FilePreview />
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault()
-                          handleSubmit(e, {
-                            data: {
-                              base64Images: JSON.stringify(base64Images),
-                            },
-                          })
-                        }}
-                        className="flex items-center justify-center px-[20px] gap-[10px] py-[19px] bg-[#fff] rounded-b-[20px] border-[1px] border-t-[#C0C0C0]"
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        multiple
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleFileButtonClick}
+                        className="w-[20px] h-[20px]"
                       >
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          onChange={handleFileChange}
-                          multiple
-                          className="hidden"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleFileButtonClick}
-                          className="w-[20px] h-[20px]"
-                        >
-                          <Image src={linkFile} alt="Link File" />
-                        </button>
-                        <input
-                          className="w-full rounded outline-none border p-[5px]"
-                          value={input}
-                          placeholder="Type your message ..."
-                          onChange={handleInputChange}
-                        />
-                        <button
-                          type="button"
-                          onClick={handleFileButtonClick}
-                          className="w-[20px] h-[20px]"
-                        >
-                          <Image src={submit} alt="Link File" />
-                        </button>
-                      </form>
-                    </div>
+                        <Image src={linkFile} alt="Link File" />
+                      </button>
+                      <input
+                        className="w-full rounded outline-none border p-[5px]"
+                        value={input}
+                        placeholder="Type your message ..."
+                        onChange={handleInputChange}
+                      />
+                      <button
+                        type="submit"
+                        className="w-[20px] h-[20px]"
+                      >
+                        <Image src={submit} alt="Link File" />
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
