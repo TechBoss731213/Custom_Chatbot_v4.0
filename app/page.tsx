@@ -216,8 +216,8 @@ export default function Chat() {
                     </SwiperSlide>
                     {messages.length > 0
                       ? messages.map((m) => (
-                        <SwiperSlide>
-                          <p key={m.id} className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
+                        <SwiperSlide key={m.id}>
+                          <p className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
                             {m.content}
                           </p>
                         </SwiperSlide>
