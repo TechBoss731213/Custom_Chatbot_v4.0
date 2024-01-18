@@ -242,7 +242,7 @@ export default function Chat() {
                             <></>
                           )}
                           {aiImageUrls.map((url: any, index: any) => (
-                            <SwiperSlide>
+                            <SwiperSlide key={index}>
                               <img src={url} alt={`Image ${index}`} height={100} width={100} />
                             </SwiperSlide>
                           ))}
