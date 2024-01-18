@@ -42,7 +42,7 @@ export default function Chat() {
     },
   ]
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);  
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -224,7 +224,7 @@ export default function Chat() {
                     {messages.length > 0
                       ? messages.map((m) => (
                         <SwiperSlide key={m.id}>
-                          <p className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
+                          <p className={`p-[10px] w-fit mb-[10px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff] text-left" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px]"}`}>
                             {m.content}
                           </p>
                         </SwiperSlide>
