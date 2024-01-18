@@ -17,11 +17,12 @@ import background from "./images/background.png";
 import linkFile from "./images/link.png";
 import submit from "./images/send.png";
 import fullScreenRevert from "./images/full-screen-revert.png";
-import fullScreen from "./images/full-screen-revert.png";
+import fullScreen from "./images/full-screen.png";
 
 export default function Chat() {
 
   const [chatBotVisible, setChatBotVisible] = useState<number>(0);
+  const [aiImageUrls, setAiImageUrls] = useState<string[]>([])
 
   const firstQuestions = [
     {
@@ -57,14 +58,22 @@ export default function Chat() {
     }
   };
 
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { data, messages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat-with-vision',
   })
+
+  type DataItem = {
+    text: string;
+    // Add any other properties if present
+  };
 
   useEffect(() => {
     if (swiperRef.current) {
       swiperRef.current.slideTo(messages.length, 0);
     }
+    const urls = (data as DataItem[])?.map((item: DataItem) => item?.text);
+    if (urls && urls.length > 0)
+      setAiImageUrls(urls)
   }, [messages]);
 
   const [imageUrls, setImageUrls] = useState<string[]>([])
@@ -222,11 +231,23 @@ export default function Chat() {
                   >
                     {messages.length > 0
                       ? messages.map((m) => (
-                        <SwiperSlide key={m.id}>
-                          <p className={`p-[10px] w-fit mb-[10px] text-[16px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px] text-left"}`}>
-                            {m.content}
-                          </p>
-                        </SwiperSlide>
+                        <Fragment key={m.id}>
+                          {m.role === "user" ? (
+                            <SwiperSlide >
+                              <p className={`p-[10px] w-fit mb-[10px] text-[16px] ${m.role === "user" ? "bg-[#08DA83] ml-auto rounded-s-[10px] rounded-t-[10px] text-[#fff]" : "bg-[#DBDBDB] rounded-e-[10px] rounded-t-[10px] text-left"}`}>
+                                {m.content}
+                              </p>
+                            </SwiperSlide>
+                          ) : (
+                            <></>
+                          )}
+                          {aiImageUrls.map((url: any, index: any) => (
+                            <SwiperSlide>
+                              <img src={url} alt={`Image ${index}`} height={100} width={100} />
+                            </SwiperSlide>
+                          ))}
+
+                        </Fragment>
                       ))
                       : null}
                   </Swiper>
